@@ -36,7 +36,7 @@ import io.reactivex.Single
 import io.reactivex.Observable
 
 /**
- * The  DNS Provider implementation for Power DNS
+ * The DNS Provider implementation for Power DNS
  * This contains most methods used for interacting directly with the Power DNS API
  * 
  * @author David Estes
@@ -399,7 +399,7 @@ class PowerDnsProvider implements DNSProvider {
         return [
                 new OptionType(code: 'accountIntegration.powerDns.serviceUrl', name: 'Service URL', inputType: OptionType.InputType.TEXT, fieldName: 'serviceUrl', fieldLabel: 'API Url', fieldContext: 'domain', displayOrder: 0),
                 new OptionType(code: 'accountIntegration.powerDns.credentials', name: 'Credentials', inputType: OptionType.InputType.CREDENTIAL, fieldName: 'type', fieldLabel: 'Credentials', fieldContext: 'credential', required: true, displayOrder: 1, defaultValue: 'local',optionSource: 'credentials',config: '{"credentialTypes":["api-key"]}'),
-                new OptionType(code: 'accountIntegration.powerDns.servicePassword', name: 'Service Password', inputType: OptionType.InputType.PASSWORD, fieldName: 'servicePassword', fieldLabel: 'Password', fieldContext: 'domain', displayOrder: 3,localCredential: true),
+                new OptionType(code: 'accountIntegration.powerDns.servicePassword', name: 'Token', inputType: OptionType.InputType.PASSWORD, fieldName: 'servicePassword', fieldLabel: 'Token', fieldContext: 'domain', displayOrder: 3,localCredential: true),
                 new OptionType(code:'accountIntegration.powerDns.serviceVersion', inputType: OptionType.InputType.SELECT, name:'serviceVersion', category:'accountIntegration.powerDns', optionSource: 'powerDnsVersion',
                         fieldName:'serviceVersion', fieldCode: 'gomorpheus.label.version', fieldLabel:'Service Version', fieldContext:'domain', required:true, enabled:true, editable:true, global:false,
                         placeHolder:null, helpBlock:'', defaultValue:null, custom:false, displayOrder:75),
