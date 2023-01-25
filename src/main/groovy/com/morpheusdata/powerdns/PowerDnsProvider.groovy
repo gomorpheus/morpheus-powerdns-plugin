@@ -397,9 +397,9 @@ class PowerDnsProvider implements DNSProvider {
     @Override
     List<OptionType> getIntegrationOptionTypes() {
         return [
-                new OptionType(code: 'accountIntegration.powerDns.serviceUrl', name: 'Service URL', inputType: OptionType.InputType.TEXT, fieldName: 'serviceUrl', fieldLabel: 'API Url', fieldContext: 'domain', displayOrder: 0),
+                new OptionType(code: 'accountIntegration.powerDns.serviceUrl', name: 'Service URL', inputType: OptionType.InputType.TEXT, fieldName: 'serviceUrl', fieldLabel: 'API Url', fieldContext: 'domain', required:true, displayOrder: 0),
                 new OptionType(code: 'accountIntegration.powerDns.credentials', name: 'Credentials', inputType: OptionType.InputType.CREDENTIAL, fieldName: 'type', fieldLabel: 'Credentials', fieldContext: 'credential', required: true, displayOrder: 1, defaultValue: 'local',optionSource: 'credentials',config: '{"credentialTypes":["api-key"]}'),
-                new OptionType(code: 'accountIntegration.powerDns.servicePassword', name: 'Token', inputType: OptionType.InputType.PASSWORD, fieldName: 'servicePassword', fieldLabel: 'Token', fieldContext: 'domain', displayOrder: 3,localCredential: true),
+                new OptionType(code: 'accountIntegration.powerDns.servicePassword', name: 'Token', inputType: OptionType.InputType.PASSWORD, fieldName: 'servicePassword', fieldLabel: 'Token', fieldContext: 'domain', required:true, displayOrder: 3,localCredential: true),
                 new OptionType(code:'accountIntegration.powerDns.serviceVersion', inputType: OptionType.InputType.SELECT, name:'serviceVersion', category:'accountIntegration.powerDns', optionSource: 'powerDnsVersion',
                         fieldName:'serviceVersion', fieldCode: 'gomorpheus.label.version', fieldLabel:'Service Version', fieldContext:'domain', required:true, enabled:true, editable:true, global:false,
                         placeHolder:null, helpBlock:'', defaultValue:null, custom:false, displayOrder:75),
