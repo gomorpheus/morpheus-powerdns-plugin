@@ -209,10 +209,12 @@ class PowerDnsProvider implements DNSProvider {
 
             if(rtn.errors.size() > 0){
                 rtn.success = false
-                return rtn
+
+            } else {
+                rtn.success = true
             }
 
-
+            return rtn
         } catch(e) {
             log.error("validateService error: ${e}", e)
             return ServiceResponse.error(e.message ?: 'unknown error validating dns service')
