@@ -340,7 +340,7 @@ class PowerDnsProvider implements DNSProvider {
             }
         }.doOnError{ e ->
             log.error("cacheZoneRecords error: ${e}", e)
-        }.subscribe()
+        }.blockingSubscribe()
 
     }
 
