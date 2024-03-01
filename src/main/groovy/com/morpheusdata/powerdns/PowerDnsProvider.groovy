@@ -308,9 +308,9 @@ class PowerDnsProvider implements DNSProvider {
 
     // Cache Zones records
     def cacheZoneRecords(final HttpApiClient client, final AccountIntegration integration) {
-        morpheus.network.domain.listIdentityProjections(integration.id).buffer(50).flatMap { Collection<NetworkDomainIdentityProjection> poolIdents ->
+        morpheus.network.domain.listIdentityProjections(integration.id).buffer(50).concatMap { Collection<NetworkDomainIdentityProjection> poolIdents ->
             return morpheus.network.domain.listById(poolIdents.collect{it.id})
-        }.flatMap { NetworkDomain domain ->
+        }.concatMap { NetworkDomain domain ->
             def listResults = listRecords(client, integration,domain)
 
 
