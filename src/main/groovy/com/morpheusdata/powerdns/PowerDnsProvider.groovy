@@ -224,7 +224,7 @@ class PowerDnsProvider implements DNSProvider {
     def cacheZones(HttpApiClient client, AccountIntegration integration) {
         try {
             def listResults = listZones(client,integration)
-
+            final Boolean defaultActive = integration?.configMap?.domainActive ? true : false
             if (listResults.success) {
                 List apiItems = listResults.results as List<Map>
                 Observable<NetworkDomainIdentityProjection> domainRecords = morpheus.network.domain.listIdentityProjections(integration.id)
@@ -235,7 +235,7 @@ class PowerDnsProvider implements DNSProvider {
                 }.onDelete {removeItems ->
                     morpheus.network.domain.remove(integration.id, removeItems).blockingGet()
                 }.onAdd { itemsToAdd ->
-                    addMissingZones(integration, itemsToAdd)
+                    addMissingZones(integration, itemsToAdd,defaultActive)
                 }.withLoadObjectDetails { List<SyncTask.UpdateItemDto<NetworkDomainIdentityProjection,Map>> updateItems ->
                     Map<Long, SyncTask.UpdateItemDto<NetworkDomainIdentityProjection, Map>> updateItemMap = updateItems.collectEntries { [(it.existingItem.id): it]}
                     return morpheus.network.domain.listById(updateItems.collect{it.existingItem.id} as Collection<Long>).map { NetworkDomain networkDomain ->
@@ -256,7 +256,7 @@ class PowerDnsProvider implements DNSProvider {
      * @param poolServer
      * @param addList
      */
-    void addMissingZones(AccountIntegration integration, Collection addList) {
+    void addMissingZones(AccountIntegration integration, Collection addList, Boolean defaultActive) {
         List<NetworkDomain> missingZonesList = addList?.collect { Map zone ->
             NetworkDomain networkDomain = new NetworkDomain()
             networkDomain.externalId = zone.url
@@ -265,6 +265,7 @@ class PowerDnsProvider implements DNSProvider {
             networkDomain.refSource = 'integration'
             networkDomain.zoneType = zone.kind
             networkDomain.publicZone = true
+            networkDomain.active = defaultActive
             networkDomain.domainSerial = zone.serial
             networkDomain.dnssec = zone.dnssec
             return networkDomain
@@ -399,7 +400,7 @@ class PowerDnsProvider implements DNSProvider {
     @Override
     List<OptionType> getIntegrationOptionTypes() {
         return [
-                new OptionType(code: 'accountIntegration.powerDns.serviceUrl', name: 'Service URL', inputType: OptionType.InputType.TEXT, fieldName: 'serviceUrl', fieldLabel: 'API Url', fieldContext: 'domain', required:true, displayOrder: 0),
+                new OptionType(code: 'accountIntegration.powerDns.serviceUrl', name: 'Service URL', inputType: OptionType.InputType.TEXT, fieldName: 'serviceUrl', fieldLabel: 'API Url', fieldContext: 'domain', required:true,helpText: 'Warning! Using HTTP URLS are insecure and not recommended.', helpTextI18nCode:'gomorpheus.help.serviceUrl', displayOrder: 0),
                 new OptionType(code: 'accountIntegration.powerDns.credentials', name: 'Credentials', inputType: OptionType.InputType.CREDENTIAL, fieldName: 'type', fieldLabel: 'Credentials', fieldContext: 'credential', required: true, displayOrder: 1, defaultValue: 'local',optionSource: 'credentials',config: '{"credentialTypes":["api-key"]}'),
                 new OptionType(code: 'accountIntegration.powerDns.servicePassword', name: 'Token', inputType: OptionType.InputType.PASSWORD, fieldName: 'servicePassword', fieldLabel: 'Token', fieldContext: 'domain', required:true, displayOrder: 3,localCredential: true),
                 new OptionType(code:'accountIntegration.powerDns.serviceVersion', inputType: OptionType.InputType.SELECT, name:'serviceVersion', category:'accountIntegration.powerDns', optionSource: 'powerDnsVersion',
@@ -407,7 +408,9 @@ class PowerDnsProvider implements DNSProvider {
                         placeHolder:null, helpBlock:'', defaultValue:null, custom:false, displayOrder:75),
                 new OptionType(code:'accountIntegration.powerDns.serviceFlag', inputType: OptionType.InputType.CHECKBOX, name:'serviceFlag', category:'accountIntegration.powerDns',
                         fieldName:'serviceFlag', fieldCode: 'gomorpheus.label.dnsPointerCreate', fieldLabel:'Create Pointers', fieldContext:'domain', required:false, enabled:true, editable:true, global:false,
-                        placeHolder:null, helpBlock:'', defaultValue:'on', custom:false, displayOrder:80)
+                        placeHolder:null, helpBlock:'', defaultValue:'on', custom:false, displayOrder:80),
+                new OptionType(code: 'accountIntegration.powerDns.domainActive', name: 'Domain Active', inputType: OptionType.InputType.CHECKBOX, defaultValue: true, fieldName: 'domainActive', fieldLabel: 'Domain Active', fieldContext: 'config', displayOrder: 85)
+
         ]
     }
 

@@ -398,8 +398,10 @@ class PowerDnsProvider implements DNSProvider {
      */
     @Override
     List<OptionType> getIntegrationOptionTypes() {
+        def applianceUrlOt = new OptionType(code: 'accountIntegration.powerDns.serviceUrl', name: 'Service URL', inputType: OptionType.InputType.TEXT, fieldName: 'serviceUrl', fieldLabel: 'API Url', fieldContext: 'domain', required:true, helpText: 'Warning! Using HTTP URLS are insecure and not recommended.', helpTextI18nCode:'gomorpheus.help.serviceUrl', displayOrder: 0)
+        applianceUrlOt.helpText = 'Warning! Using HTTP URLS are insecure and not recommended.'
         return [
-                new OptionType(code: 'accountIntegration.powerDns.serviceUrl', name: 'Service URL', inputType: OptionType.InputType.TEXT, fieldName: 'serviceUrl', fieldLabel: 'API Url', fieldContext: 'domain', required:true, helpBlock: 'Warning! Using HTTP URLS are insecure and not recommended.', displayOrder: 0),
+                applianceUrlOt,
                 new OptionType(code: 'accountIntegration.powerDns.credentials', name: 'Credentials', inputType: OptionType.InputType.CREDENTIAL, fieldName: 'type', fieldLabel: 'Credentials', fieldContext: 'credential', required: true, displayOrder: 1, defaultValue: 'local',optionSource: 'credentials',config: '{"credentialTypes":["api-key"]}'),
                 new OptionType(code: 'accountIntegration.powerDns.servicePassword', name: 'Token', inputType: OptionType.InputType.PASSWORD, fieldName: 'servicePassword', fieldLabel: 'Token', fieldContext: 'domain', required:true, displayOrder: 3,localCredential: true),
                 new OptionType(code:'accountIntegration.powerDns.serviceVersion', inputType: OptionType.InputType.SELECT, name:'serviceVersion', category:'accountIntegration.powerDns', optionSource: 'powerDnsVersion',
