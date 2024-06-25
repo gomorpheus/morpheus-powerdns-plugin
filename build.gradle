@@ -82,6 +82,10 @@ jar {
 	}
 }
 
+task copyRuntimeLibs(type: Copy) {
+	into "lib"
+	from project.configurations.runtimeClasspath - project.configurations.provided
+}
 
 task(console, dependsOn: 'classes', type: JavaExec) {
 	main = 'groovy.ui.Console'
